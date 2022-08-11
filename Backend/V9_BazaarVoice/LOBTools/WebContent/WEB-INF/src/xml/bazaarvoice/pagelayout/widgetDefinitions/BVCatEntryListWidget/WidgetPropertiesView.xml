@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	=================================================================
+	Copyright [2021] [HCL Technologies]
+
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+
+		http://www.apache.org/licenses/LICENSE-2.0
+
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+	=================================================================
+-->
+
+<Definitions>
+
+	<GridObjectProperties definitionName="cmc/pagelayout/WidgetProperties_BVCatEntryListWidget">
+		<dependency localName="pageLayoutResources" moduleName="cmc/pagelayout/PageLayoutResources"/>
+		<dependency localName="bazaarvoicePageLayoutResources" moduleName="cmc/pagelayout/bazaarvoicePageLayoutResources"/>		
+		<PropertyPane>
+    		<PropertyGroup name="widgetProperties" collapsable="false" groupTitle="${pageLayoutResources.widgetPropertiesPrompt}">
+				<PropertyInputText name="${pageLayoutResources.widgetNamePrompt}" propertyName="widgetName"
+					extendedHelpText="${pageLayoutResources.extendedHelpText_productListingWidgetWidgetName}" promptText="${pageLayoutResources.widgetNamePrompt}"/>
+				<PropertyRadioGroup propertyName="xWidgetProp_pageView" extendedHelpText="${pageLayoutResources.extendedHelpText_productListingWidgetInitialView}"
+					promptText="${pageLayoutResources.productListingWidgetInitialViewPrompt}"/>
+				<PropertyCheckbox trueValue="false" falseValue="true" propertyName="xWidgetProp_showCompareBox" 
+					text="${pageLayoutResources.productListingWidgetShowCompareBoxPrompt}" extendedHelpText="${pageLayoutResources.extendedHelpText_productListingWidgetShowCompareBox}" />
+			</PropertyGroup>
+			<PropertyGroup name="widgetContent" collapsable="false" groupTitle="${pageLayoutResources.widgetContentPrompt}">
+    			
+    			<PropertyStaticText text="${pageLayoutResources.productListingWidgetContentDescription}"/>
+    			
+    			<PropertyCheckbox 
+    				propertyName="xWidgetProp_addAdditionalContent"
+    				text="${pageLayoutResources.productListingWidgetAddContent}"/>
+    			
+				<!--  Property group for widget default content of local page layout-->
+				<PropertyGroup collapsable="false" name="widgetDefaultContent">
+					<EnablementAndCondition>
+						<EnablementCondition checkObjectDefinition="true" conditionId="layoutCondition" 
+							enablementValue="PageLayout" propertyName="objectType" parentProperty="true"/>
+						<EnablementCondition conditionId="addContentCondition" 
+							enablementValue="true" propertyName="xWidgetProp_addAdditionalContent"/>
+					</EnablementAndCondition>				
+					<PropertyChildListEditor 
+						listDefinition="cmc/pagelayout/CatalogEntryListingMarketingDefaultContentGrid" 
+						name="DefaultMarketingContentListEditor" 
+						objectTypes="DefaultEMarketingSpotMarketingContentReference,InheritedDefaultEMarketingSpotMarketingContentReference" 
+						promptText="${pageLayoutResources.widgetContent}" 
+						required="false"
+						allowCreateReferencedPrimary="true"/>					
+				</PropertyGroup>
+				
+				<!--  Property group for widget default content of local page layout-->
+				<PropertyGroup collapsable="false" name="widgetDefaultContentInherited">
+					<EnablementAndCondition>
+						<EnablementCondition checkObjectDefinition="true" conditionId="inheritedLayoutCondition" 
+							enablementValue="InheritedPageLayout" propertyName="objectType" parentProperty="true"/>
+						<EnablementCondition conditionId="addContentCondition" 
+							enablementValue="true" propertyName="xWidgetProp_addAdditionalContent"/>
+					</EnablementAndCondition>						
+					<PropertyChildListEditor 
+						listDefinition="cmc/pagelayout/CatalogEntryListingMarketingDefaultContentGrid" 
+						name="InheritedDefaultMarketingContentListEditor" 
+						objectTypes="InheritedDefaultEMarketingSpotInheritedMarketingContentReference" 
+						promptText="${pageLayoutResources.widgetContent}" 
+						required="false"
+						displayObjectStoreName="true"/>
+					<PropertyChildListEditor 
+						listDefinition="cmc/pagelayout/CatalogEntryListingMarketingDefaultContentGrid" 
+						name="LocalDefaultMarketingContentListEditor" 
+						objectTypes="DefaultEMarketingSpotMarketingContentReference,InheritedDefaultEMarketingSpotMarketingContentReference" 
+						promptText="${pageLayoutResources.widgetContent}" 
+						required="false"
+						allowCreateReferencedPrimary="true"
+						displayStoreName="true"/>
+				</PropertyGroup>
+				
+			</PropertyGroup>
+		</PropertyPane>
+	</GridObjectProperties>
+
+</Definitions>

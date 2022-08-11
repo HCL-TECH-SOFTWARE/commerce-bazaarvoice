@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	=================================================================
+	Copyright [2021] [HCL Technologies]
+
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+
+		http://www.apache.org/licenses/LICENSE-2.0
+
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+	=================================================================
+-->
+
+<Definitions>
+
+	<WidgetObjectDefinition package="cmc/pagelayout"
+		definitionName="cmc/pagelayout/LayoutWidget_BVCatEntryListWidget" 
+		parentDefinition="cmc/pagelayout/BasePageLayoutPrimaryObjectDefinition"
+		baseDefinition="cmc/pagelayout/BaseLayoutWidget"
+		objectType="BVCatEntryListWidget"
+		gridPropertiesDefinition="cmc/pagelayout/WidgetProperties_BVCatEntryListWidget"
+		widgetDisplayGroups="CategoryPage,SearchPage"
+		iconPath="/images/pagelayouts/widgetIcons/BVCatEntryListWidget.png">
+		
+		<PropertyDefinition propertyName="xWidgetProp_pageView">			
+			<PropertyValue displayName="${pageLayoutResources.productListingWidgetInitialView_Grid}" value="grid"/>
+			<PropertyValue displayName="${pageLayoutResources.productListingWidgetInitialView_List}" value="list"/>
+		</PropertyDefinition>
+		
+		<PropertyDefinition propertyName="xWidgetProp_addAdditionalContent"/>
+		
+		<CreateService baseDefinition="cmc/pagelayout/BaseCreateLayoutWidget" />
+		<UpdateService baseDefinition="cmc/pagelayout/BaseUpdateLayoutWidget" />
+		
+		<ReferenceObjectDefinition
+		 	baseDefinition="cmc/pagelayout/BaseDefaultMarketingContentReference" 
+		 	objectType="DefaultEMarketingSpotMarketingContentReference" 
+		 	referencedTypes="MarketingContent">
+		</ReferenceObjectDefinition>
+		
+		<ReferenceObjectDefinition 
+		 	baseDefinition="cmc/pagelayout/BaseDefaultMarketingContentReference" 
+		 	objectType="InheritedDefaultEMarketingSpotInheritedMarketingContentReference" 
+		 	referencedTypes="InheritedMarketingContent">
+		 	<EnablementCondition checkHasAccessRight="true" conditionId="accessRightCondition" enablementValue="true"/>
+		</ReferenceObjectDefinition>
+		
+		<ReferenceObjectDefinition 
+		 	baseDefinition="cmc/pagelayout/BaseDefaultMarketingContentReference" 
+		 	objectType="InheritedDefaultEMarketingSpotMarketingContentReference" 
+		 	referencedTypes="InheritedMarketingContent">
+		</ReferenceObjectDefinition>
+
+		<Xml name="template">
+			<xWidgetProp_pageView>grid</xWidgetProp_pageView>
+			<xWidgetProp_disableProductCompare>true</xWidgetProp_disableProductCompare>
+			<xWidgetProp_addAdditionalContent>false</xWidgetProp_addAdditionalContent>
+			<sequence>0</sequence>
+		</Xml>		
+	</WidgetObjectDefinition>
+	
+</Definitions>

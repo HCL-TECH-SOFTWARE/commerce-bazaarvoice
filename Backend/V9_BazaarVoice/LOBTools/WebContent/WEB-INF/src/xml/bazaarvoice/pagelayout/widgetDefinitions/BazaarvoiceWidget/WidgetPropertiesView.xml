@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	=================================================================
+	Copyright [2021] [HCL Technologies]
+
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+
+		http://www.apache.org/licenses/LICENSE-2.0
+
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+	=================================================================
+-->
+
+<Definitions>
+
+	<GridObjectProperties definitionName="cmc/pagelayout/WidgetProperties_BazaarvoiceWidget">
+	<dependency localName="pageLayoutResources" moduleName="cmc/pagelayout/PageLayoutResources"/>
+	<dependency localName="bazaarvoicePageLayoutResources" moduleName="cmc/pagelayout/bazaarvoicePageLayoutResources"/>
+	
+		<PropertyPane>
+			<PropertyGroup name="widgetProperties" collapsable="false" groupTitle="${pageLayoutResources.widgetPropertiesPrompt}">
+				<PropertyInputText name="${pageLayoutResources.widgetNamePrompt}" propertyName="widgetName"
+					promptText="${pageLayoutResources.widgetNamePrompt}" />						
+				<!-- Use RadioGroup-->
+		<PropertyRadioGroup propertyName="xWidgetProp_displayType" 
+		helpText="${bazaarvoicePageLayoutResources.displayTypeHelp}"
+		promptText="${bazaarvoicePageLayoutResources.displayTypePrompt}" />		
+			
+				<PropertyInputMultiLineText helpText="${bazaarvoicePageLayoutResources.showReviewInTabJSHelp}" propertyName="xWidgetProp_showReviewInTabJS"
+					promptText="${bazaarvoicePageLayoutResources.showReviewInTabJSPrompt}"/>
+			</PropertyGroup>
+			<PropertyGroup name="contentProperties" collapsable="false" groupTitle="${pageLayoutResources.widgetContentPrompt}">
+				<PropertyStaticText text="${bazaarvoicePageLayoutResources.BazaarvoiceWidgetContent}" />
+			</PropertyGroup>
+		</PropertyPane>
+		
+	</GridObjectProperties>
+
+</Definitions>

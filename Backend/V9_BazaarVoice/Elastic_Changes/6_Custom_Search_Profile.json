@@ -1,0 +1,16 @@
+{
+	"parentProfileName": "HCL_V2_findProductsByCategory",
+	"profileName": "X_findProductsByCategory_BVcustom",
+	"query": {
+		"sortFields": {
+			"5": "BVcustom.X_FIELD3 desc"
+		},
+		"provider": [
+			"com.hcl.commerce.search.internal.expression.provider.SearchByCustomBVFacetExpressionProvider"
+		],
+		"responseFields": [
+			"BVcustom.X_FIELD1",
+			"BVcustom.X_FIELD3"
+		]
+	}
+}

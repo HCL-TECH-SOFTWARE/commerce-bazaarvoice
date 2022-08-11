@@ -1,0 +1,20 @@
+{
+  "valuemappingservice": {
+    "valuemapping": [
+      {
+        "internalName": "CatalogEntryUserDataFieldNameMapping",
+        "externalName": "CatalogEntryUserDataFieldNameMapping",
+        "valuemap": [
+          {
+            "externalValue": "X_FIELD1",
+            "internalValue": "BVcustom.X_FIELD1"
+          },
+          {
+            "externalValue": "X_FIELD3",
+            "internalValue": "BVcustom.X_FIELD3"
+          }
+        ]
+      }
+    ]
+  }
+}

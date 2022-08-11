@@ -1,0 +1,24 @@
+{
+   "properties":{
+      "BVcustom":{
+         "properties":{
+            "X_FIELD1":{
+               "type":"integer",
+			   "coerce":"true",
+               "doc_values":"true",
+			   "ignore_malformed":"false",
+               "index":"true",
+               "store":"true"
+            },
+			"X_FIELD3":{
+               "type":"double",
+			   "coerce":"true",
+               "doc_values":"true",
+			   "ignore_malformed":"false",
+               "index":"true",
+               "store":"true"
+            }
+         }
+      }
+   }
+}

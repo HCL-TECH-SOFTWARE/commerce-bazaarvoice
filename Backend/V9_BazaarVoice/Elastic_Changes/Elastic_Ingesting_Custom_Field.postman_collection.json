@@ -1,0 +1,839 @@
+{
+	"info": {
+		"_postman_id": "cf9140a0-da42-4a8f-8e47-5cdd7eeeea0f",
+		"name": "Elastic_Ingesting_Custom_Field",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1_Create NIFI Connector",
+			"item": [
+				{
+					"name": "Create NIFI Connector",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "passw0rd",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "spiuser",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"BVcustom\",\r\n  \"description\": \"This is the connector for the BV custom processing\",\r\n  \"pipes\": [\r\n    {\r\n      \"name\": \"_Template-Schema\"\r\n    },\r\n    {\r\n      \"name\": \"_Template-Groovy-DatabaseETL\",\r\n      \"properties\": [\r\n        {\r\n          \"name\": \"Database Driver Location(s)\",\r\n          \"value\": \"${AUTH_JDBC_DRIVER_LOCATION}\",\r\n          \"scope\": {\r\n            \"name\": \"Database Connection Pool\",\r\n            \"type\": \"CONTROLLER_SERVICE\"\r\n          }\r\n        },\r\n        {\r\n          \"name\": \"Database Driver Class Name \",\r\n          \"value\": \"${AUTH_JDBC_DRIVER_CLASSNAME}\",\r\n          \"scope\": {\r\n            \"name\": \"Database Connection Pool\",\r\n            \"type\": \"CONTROLLER_SERVICE\"\r\n          }\r\n        },\r\n        {\r\n          \"name\": \"Database Connection URL\",\r\n          \"value\": \"${AUTH_JDBC_URL}\",\r\n          \"scope\": {\r\n            \"name\": \"Database Connection Pool\",\r\n            \"type\": \"CONTROLLER_SERVICE\"\r\n          }\r\n        },\r\n        {\r\n          \"name\": \"Database User\",\r\n          \"value\": \"${AUTH_JDBC_USER_NAME}\",\r\n          \"scope\": {\r\n            \"name\": \"Database Connection Pool\",\r\n            \"type\": \"CONTROLLER_SERVICE\"\r\n          }\r\n        },\r\n        {\r\n          \"name\": \"Password\",\r\n          \"value\": \"${AUTH_JDBC_USER_PASSWORD}\",\r\n          \"scope\": {\r\n            \"name\": \"Database Connection Pool\",\r\n            \"type\": \"CONTROLLER_SERVICE\"\r\n          }\r\n        }\r\n      ]\r\n    },\r\n    {\r\n      \"name\": \"Terminal\"\r\n    }\r\n  ]\r\n}"
+						},
+						"url": {
+							"raw": "http://commerce-preview.comdx.demo.com:30800/connectors",
+							"protocol": "http",
+							"host": [
+								"commerce-preview",
+								"comdx",
+								"demo",
+								"com"
+							],
+							"port": "30800",
+							"path": [
+								"connectors"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "3_Build an index and verify that the custom field is indexed",
+			"item": [
+				{
+					"name": "Build Emerald Index",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "passw0rd",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "spiuser",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://commerce-preview.comdx.demo.com:5443/wcs/resources/admin/index/dataImport/build?connectorId=auth.reindex&storeId=11",
+							"protocol": "https",
+							"host": [
+								"commerce-preview",
+								"comdx",
+								"demo",
+								"com"
+							],
+							"port": "5443",
+							"path": [
+								"wcs",
+								"resources",
+								"admin",
+								"index",
+								"dataImport",
+								"build"
+							],
+							"query": [
+								{
+									"key": "connectorId",
+									"value": "auth.reindex"
+								},
+								{
+									"key": "storeId",
+									"value": "11"
+								}
+							]
+						},
+						"description": "https://localhost:5443/wcs/resources/admin/index/dataImport/build?connectorId=auth.reindex&storeId=11"
+					},
+					"response": []
+				},
+				{
+					"name": "Build Sapphire Index",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "passw0rd",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "spiuser",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://commerce-preview.comdx.demo.com:5443/wcs/resources/admin/index/dataImport/build?connectorId=auth.reindex&storeId=12",
+							"protocol": "https",
+							"host": [
+								"commerce-preview",
+								"comdx",
+								"demo",
+								"com"
+							],
+							"port": "5443",
+							"path": [
+								"wcs",
+								"resources",
+								"admin",
+								"index",
+								"dataImport",
+								"build"
+							],
+							"query": [
+								{
+									"key": "connectorId",
+									"value": "auth.reindex"
+								},
+								{
+									"key": "storeId",
+									"value": "12"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Build AuroraESite Index",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "passw0rd",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "spiuser",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://commerce-preview.comdx.demo.com:5443/wcs/resources/admin/index/dataImport/build?connectorId=auth.reindex&storeId=1",
+							"protocol": "https",
+							"host": [
+								"commerce-preview",
+								"comdx",
+								"demo",
+								"com"
+							],
+							"port": "5443",
+							"path": [
+								"wcs",
+								"resources",
+								"admin",
+								"index",
+								"dataImport",
+								"build"
+							],
+							"query": [
+								{
+									"key": "connectorId",
+									"value": "auth.reindex"
+								},
+								{
+									"key": "storeId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Build AuroraB2BESite Index",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "passw0rd",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "spiuser",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://commerce-preview.comdx.demo.com:5443/wcs/resources/admin/index/dataImport/build?connectorId=auth.reindex&storeId=2",
+							"protocol": "https",
+							"host": [
+								"commerce-preview",
+								"comdx",
+								"demo",
+								"com"
+							],
+							"port": "5443",
+							"path": [
+								"wcs",
+								"resources",
+								"admin",
+								"index",
+								"dataImport",
+								"build"
+							],
+							"query": [
+								{
+									"key": "connectorId",
+									"value": "auth.reindex"
+								},
+								{
+									"key": "storeId",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Status of an Index Build",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "passw0rd",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "spiuser",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://commerce-preview.comdx.demo.com:5443/wcs/resources/admin/index/dataImport/status?jobStatusId=1501",
+							"protocol": "https",
+							"host": [
+								"commerce-preview",
+								"comdx",
+								"demo",
+								"com"
+							],
+							"port": "5443",
+							"path": [
+								"wcs",
+								"resources",
+								"admin",
+								"index",
+								"dataImport",
+								"status"
+							],
+							"query": [
+								{
+									"key": "jobStatusId",
+									"value": "1501"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Product By Id (Elastic) (Verify Custom Index Data)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://commerce-preview.comdx.demo.com:30200/auth.11.product/_search?q=id.catentry:14018",
+							"protocol": "http",
+							"host": [
+								"commerce-preview",
+								"comdx",
+								"demo",
+								"com"
+							],
+							"port": "30200",
+							"path": [
+								"auth.11.product",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "id.catentry:14018"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Product By Id (Elastic) (Verify Custom Index Data with query)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"from\": 0,\r\n  \"size\": 12,\r\n  \"timeout\": \"15000ms\",\r\n  \"query\": {\r\n    \"bool\": {\r\n      \"must\": [\r\n        {\r\n          \"query_string\": {\r\n            \"query\": \"*\",\r\n            \"fields\": [\r\n              \"name.text^10.0\"\r\n            ],\r\n            \"type\": \"best_fields\",\r\n            \"default_operator\": \"or\",\r\n            \"max_determinized_states\": 10000,\r\n            \"enable_position_increments\": true,\r\n            \"fuzziness\": \"AUTO\",\r\n            \"fuzzy_prefix_length\": 0,\r\n            \"fuzzy_max_expansions\": 50,\r\n            \"phrase_slop\": 100,\r\n            \"escape\": false,\r\n            \"auto_generate_synonyms_phrase_query\": true,\r\n            \"fuzzy_transpositions\": true,\r\n            \"boost\": 1\r\n          }\r\n        }\r\n      ],\r\n      \"filter\": [\r\n        {\r\n          \"query_string\": {\r\n            \"query\": \"workspace_name : \\\"Base\\\"\",\r\n            \"fields\": [],\r\n            \"type\": \"best_fields\",\r\n            \"default_operator\": \"or\",\r\n            \"max_determinized_states\": 10000,\r\n            \"enable_position_increments\": true,\r\n            \"fuzziness\": \"AUTO\",\r\n            \"fuzzy_prefix_length\": 0,\r\n            \"fuzzy_max_expansions\": 50,\r\n            \"phrase_slop\": 0,\r\n            \"escape\": false,\r\n            \"auto_generate_synonyms_phrase_query\": true,\r\n            \"fuzzy_transpositions\": true,\r\n            \"boost\": 1\r\n          }\r\n        },\r\n        {\r\n          \"query_string\": {\r\n            \"query\": \"-((type:item AND relationship.product.id:*) OR (type:variant AND state:false))\",\r\n            \"fields\": [],\r\n            \"type\": \"best_fields\",\r\n            \"default_operator\": \"or\",\r\n            \"max_determinized_states\": 10000,\r\n            \"enable_position_increments\": true,\r\n            \"fuzziness\": \"AUTO\",\r\n            \"fuzzy_prefix_length\": 0,\r\n            \"fuzzy_max_expansions\": 50,\r\n            \"phrase_slop\": 0,\r\n            \"escape\": false,\r\n            \"auto_generate_synonyms_phrase_query\": true,\r\n            \"fuzzy_transpositions\": true,\r\n            \"boost\": 1\r\n          }\r\n        },\r\n        {\r\n          \"query_string\": {\r\n            \"query\": \"id.catalog:\\\"11501\\\"\",\r\n            \"fields\": [],\r\n            \"type\": \"best_fields\",\r\n            \"default_operator\": \"or\",\r\n            \"max_determinized_states\": 10000,\r\n            \"enable_position_increments\": true,\r\n            \"fuzziness\": \"AUTO\",\r\n            \"fuzzy_prefix_length\": 0,\r\n            \"fuzzy_max_expansions\": 50,\r\n            \"phrase_slop\": 0,\r\n            \"escape\": false,\r\n            \"auto_generate_synonyms_phrase_query\": true,\r\n            \"fuzzy_transpositions\": true,\r\n            \"boost\": 1\r\n          }\r\n        },\r\n        {\r\n          \"query_string\": {\r\n            \"query\": \"id.store:(\\\"11\\\")\",\r\n            \"fields\": [],\r\n            \"type\": \"best_fields\",\r\n            \"default_operator\": \"or\",\r\n            \"max_determinized_states\": 10000,\r\n            \"enable_position_increments\": true,\r\n            \"fuzziness\": \"AUTO\",\r\n            \"fuzzy_prefix_length\": 0,\r\n            \"fuzzy_max_expansions\": 50,\r\n            \"phrase_slop\": 0,\r\n            \"escape\": false,\r\n            \"auto_generate_synonyms_phrase_query\": true,\r\n            \"fuzzy_transpositions\": true,\r\n            \"boost\": 1\r\n          }\r\n        },\r\n        {\r\n          \"query_string\": {\r\n            \"query\": \"id.language:\\\"-1\\\"\",\r\n            \"fields\": [],\r\n            \"type\": \"best_fields\",\r\n            \"default_operator\": \"or\",\r\n            \"max_determinized_states\": 10000,\r\n            \"enable_position_increments\": true,\r\n            \"fuzziness\": \"AUTO\",\r\n            \"fuzzy_prefix_length\": 0,\r\n            \"fuzzy_max_expansions\": 50,\r\n            \"phrase_slop\": 0,\r\n            \"escape\": false,\r\n            \"auto_generate_synonyms_phrase_query\": true,\r\n            \"fuzzy_transpositions\": true,\r\n            \"boost\": 1\r\n          }\r\n        },\r\n        {\r\n          \"query_string\": {\r\n            \"query\": \"displayable:true\",\r\n            \"fields\": [],\r\n            \"type\": \"best_fields\",\r\n            \"default_operator\": \"or\",\r\n            \"max_determinized_states\": 10000,\r\n            \"enable_position_increments\": true,\r\n            \"fuzziness\": \"AUTO\",\r\n            \"fuzzy_prefix_length\": 0,\r\n            \"fuzzy_max_expansions\": 50,\r\n            \"phrase_slop\": 0,\r\n            \"escape\": false,\r\n            \"auto_generate_synonyms_phrase_query\": true,\r\n            \"fuzzy_transpositions\": true,\r\n            \"boost\": 1\r\n          }\r\n        },\r\n        {\r\n          \"query_string\": {\r\n            \"query\": \"( \\\"10502\\\")\",\r\n            \"fields\": [\r\n              \"category.11501-*.id^1.0\"\r\n            ],\r\n            \"type\": \"best_fields\",\r\n            \"default_operator\": \"or\",\r\n            \"max_determinized_states\": 10000,\r\n            \"enable_position_increments\": true,\r\n            \"fuzziness\": \"AUTO\",\r\n            \"fuzzy_prefix_length\": 0,\r\n            \"fuzzy_max_expansions\": 50,\r\n            \"phrase_slop\": 0,\r\n            \"escape\": false,\r\n            \"auto_generate_synonyms_phrase_query\": true,\r\n            \"fuzzy_transpositions\": true,\r\n            \"boost\": 1\r\n          }\r\n        }\r\n      ],\r\n      \"adjust_pure_negative\": true,\r\n      \"boost\": 1\r\n    }\r\n  },\r\n  \"explain\": true,\r\n  \"sort\": [\r\n    {\r\n      \"category.11501-10502.sequence\": {\r\n        \"order\": \"asc\",\r\n        \"unmapped_type\": \"float\"\r\n      }\r\n    }\r\n  ],\r\n  \"aggregations\": {\r\n    \"path\": {\r\n      \"terms\": {\r\n        \"field\": \"path.11501\",\r\n        \"size\": 10000,\r\n        \"min_doc_count\": 1,\r\n        \"shard_min_doc_count\": 0,\r\n        \"show_term_doc_count_error\": false,\r\n        \"order\": [\r\n          {\r\n            \"_count\": \"desc\"\r\n          },\r\n          {\r\n            \"_key\": \"asc\"\r\n          }\r\n        ]\r\n      }\r\n    },\r\n    \"attributes.BVcustom.X_FIELD3.value.raw\": {\r\n      \"terms\": {\r\n        \"field\": \"BVcustom.X_FIELD3\",\r\n        \"size\": 10000,\r\n        \"min_doc_count\": 1,\r\n        \"shard_min_doc_count\": 0,\r\n        \"show_term_doc_count_error\": false,\r\n        \"order\": [\r\n          {\r\n            \"_count\": \"desc\"\r\n          },\r\n          {\r\n            \"_key\": \"asc\"\r\n          }\r\n        ]\r\n      }\r\n    },\r\n    \"attributes.7000000000000000503.value.raw\": {\r\n      \"terms\": {\r\n        \"field\": \"attributes.7000000000000000503.value.raw\",\r\n        \"size\": 10000,\r\n        \"min_doc_count\": 1,\r\n        \"shard_min_doc_count\": 0,\r\n        \"show_term_doc_count_error\": false,\r\n        \"order\": [\r\n          {\r\n            \"_count\": \"desc\"\r\n          },\r\n          {\r\n            \"_key\": \"asc\"\r\n          }\r\n        ]\r\n      }\r\n    },\r\n    \"attributes.7000000000000000511.value.raw\": {\r\n      \"terms\": {\r\n        \"field\": \"attributes.7000000000000000511.value.raw\",\r\n        \"size\": 10000,\r\n        \"min_doc_count\": 1,\r\n        \"shard_min_doc_count\": 0,\r\n        \"show_term_doc_count_error\": false,\r\n        \"order\": [\r\n          {\r\n            \"_count\": \"desc\"\r\n          },\r\n          {\r\n            \"_key\": \"asc\"\r\n          }\r\n        ]\r\n      }\r\n    },\r\n    \"attributes.7000000000000000510.value.raw\": {\r\n      \"terms\": {\r\n        \"field\": \"attributes.7000000000000000510.value.raw\",\r\n        \"size\": 10000,\r\n        \"min_doc_count\": 1,\r\n        \"shard_min_doc_count\": 0,\r\n        \"show_term_doc_count_error\": false,\r\n        \"order\": [\r\n          {\r\n            \"_count\": \"desc\"\r\n          },\r\n          {\r\n            \"_key\": \"asc\"\r\n          }\r\n        ]\r\n      }\r\n    },\r\n    \"attributes.7000000000000000502.value.raw\": {\r\n      \"terms\": {\r\n        \"field\": \"attributes.7000000000000000502.value.raw\",\r\n        \"size\": 10000,\r\n        \"min_doc_count\": 1,\r\n        \"shard_min_doc_count\": 0,\r\n        \"show_term_doc_count_error\": false,\r\n        \"order\": [\r\n          {\r\n            \"_count\": \"desc\"\r\n          },\r\n          {\r\n            \"_key\": \"asc\"\r\n          }\r\n        ]\r\n      }\r\n    },\r\n    \"manufacturer.raw\": {\r\n      \"terms\": {\r\n        \"field\": \"manufacturer.raw\",\r\n        \"size\": 10000,\r\n        \"min_doc_count\": 1,\r\n        \"shard_min_doc_count\": 0,\r\n        \"show_term_doc_count_error\": false,\r\n        \"order\": [\r\n          {\r\n            \"_count\": \"desc\"\r\n          },\r\n          {\r\n            \"_key\": \"asc\"\r\n          }\r\n        ]\r\n      }\r\n    },\r\n    \"prices.-11005.usd\": {\r\n      \"terms\": {\r\n        \"field\": \"prices.-11005.usd\",\r\n        \"size\": 10000,\r\n        \"min_doc_count\": 1,\r\n        \"shard_min_doc_count\": 0,\r\n        \"show_term_doc_count_error\": false,\r\n        \"order\": [\r\n          {\r\n            \"_count\": \"desc\"\r\n          },\r\n          {\r\n            \"_key\": \"asc\"\r\n          }\r\n        ]\r\n      }\r\n    },\r\n    \"attributes.7000000000000000512.value.raw\": {\r\n      \"terms\": {\r\n        \"field\": \"attributes.7000000000000000512.value.raw\",\r\n        \"size\": 10000,\r\n        \"min_doc_count\": 1,\r\n        \"shard_min_doc_count\": 0,\r\n        \"show_term_doc_count_error\": false,\r\n        \"order\": [\r\n          {\r\n            \"_count\": \"desc\"\r\n          },\r\n          {\r\n            \"_key\": \"asc\"\r\n          }\r\n        ]\r\n      }\r\n    },\r\n    \"attributes.7000000000000000501.value.raw\": {\r\n      \"terms\": {\r\n        \"field\": \"attributes.7000000000000000501.value.raw\",\r\n        \"size\": 10000,\r\n        \"min_doc_count\": 1,\r\n        \"shard_min_doc_count\": 0,\r\n        \"show_term_doc_count_error\": false,\r\n        \"order\": [\r\n          {\r\n            \"_count\": \"desc\"\r\n          },\r\n          {\r\n            \"_key\": \"asc\"\r\n          }\r\n        ]\r\n      }\r\n    }\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://commerce-preview.comdx.demo.com:30200/auth.11.product/_search",
+							"protocol": "http",
+							"host": [
+								"commerce-preview",
+								"comdx",
+								"demo",
+								"com"
+							],
+							"port": "30200",
+							"path": [
+								"auth.11.product",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "4a_Search Configuration",
+			"item": [
+				{
+					"name": "Add Search Configuration",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "passw0rd",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "spiuser",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"valuemappingservice\": {\n    \"valuemapping\": [\n      {\n        \"internalName\": \"CatalogEntryUserDataFieldNameMapping\",\n        \"externalName\": \"CatalogEntryUserDataFieldNameMapping\",\n        \"valuemap\": [\n          {\n            \"externalValue\": \"X_FIELD1\",\n            \"internalValue\": \"BVcustom.X_FIELD1\"\n          },\n          {\n            \"externalValue\": \"X_FIELD3\",\n            \"internalValue\": \"BVcustom.X_FIELD3\"\n          }\n        ]\n      }\n    ]\n  }\n}"
+						},
+						"url": {
+							"raw": "http://commerce-preview.comdx.demo.com:30920/search/resources/api/v2/configuration?nodeName=component&envType=auth",
+							"protocol": "http",
+							"host": [
+								"commerce-preview",
+								"comdx",
+								"demo",
+								"com"
+							],
+							"port": "30920",
+							"path": [
+								"search",
+								"resources",
+								"api",
+								"v2",
+								"configuration"
+							],
+							"query": [
+								{
+									"key": "nodeName",
+									"value": "component"
+								},
+								{
+									"key": "envType",
+									"value": "auth"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get_Search_Configuration",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "passw0rd",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "spiuser",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://commerce-preview.comdx.demo.com:30920/search/resources/api/v2/configuration?nodeName=component&envType=auth",
+							"protocol": "http",
+							"host": [
+								"commerce-preview",
+								"comdx",
+								"demo",
+								"com"
+							],
+							"port": "30920",
+							"path": [
+								"search",
+								"resources",
+								"api",
+								"v2",
+								"configuration"
+							],
+							"query": [
+								{
+									"key": "nodeName",
+									"value": "component"
+								},
+								{
+									"key": "envType",
+									"value": "auth"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "4b_Custom Search Profile",
+			"item": [
+				{
+					"name": "Add Search profile",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "passw0rd",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "spiuser",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"parentProfileName\": \"HCL_V2_findProductsByCategory\",\n\t\"profileName\": \"X_findProductsByCategory_BVcustom\",\n\t\"query\": {\n\t\t\"sortFields\": {\n\t\t\t\"5\": \"BVcustom.X_FIELD3 desc\"\n\t\t},\n\t\t\"provider\": [\n\t\t\t\"com.hcl.commerce.search.internal.expression.provider.SearchByCustomBVFacetExpressionProvider\"\n\t\t],\n\t\t\"responseFields\": [\n\t\t\t\"BVcustom.X_FIELD1\",\n\t\t\t\"BVcustom.X_FIELD3\"\n\t\t]\n\t}\n}"
+						},
+						"url": {
+							"raw": "http://commerce-preview.comdx.demo.com:30920/search/resources/api/v2/documents/profiles/X_findProductsByCategory_BVcustom",
+							"protocol": "http",
+							"host": [
+								"commerce-preview",
+								"comdx",
+								"demo",
+								"com"
+							],
+							"port": "30920",
+							"path": [
+								"search",
+								"resources",
+								"api",
+								"v2",
+								"documents",
+								"profiles",
+								"X_findProductsByCategory_BVcustom"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Search Profiles",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "passw0rd",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "spiuser",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://commerce-preview.comdx.demo.com:30920/search/resources/api/v2/documents/profiles",
+							"protocol": "http",
+							"host": [
+								"commerce-preview",
+								"comdx",
+								"demo",
+								"com"
+							],
+							"port": "30920",
+							"path": [
+								"search",
+								"resources",
+								"api",
+								"v2",
+								"documents",
+								"profiles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Search Profile",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "passw0rd",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "spiuser",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://commerce-preview.comdx.demo.com:30920/search/resources/api/v2/documents/profiles/X_findProductsByCategory_BVcustom",
+							"protocol": "http",
+							"host": [
+								"commerce-preview",
+								"comdx",
+								"demo",
+								"com"
+							],
+							"port": "30920",
+							"path": [
+								"search",
+								"resources",
+								"api",
+								"v2",
+								"documents",
+								"profiles",
+								"X_findProductsByCategory_BVcustom"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Search Profile",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "passw0rd",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "spiuser",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"parentProfileName\": \"HCL_V2_findProductsByCategory\",\n\t\"profileName\": \"X_findProductsByCategory_BVcustom\",\n\t\"query\": {\n\t\t\"sortFields\": {\n\t\t\t\"5\": \"BVcustom.X_FIELD3 desc\"\n\t\t},\n\t\t\"provider\": [\n\t\t\t\"com.hcl.commerce.search.internal.expression.provider.SearchByCustomBVFacetExpressionProvider\"\n\t\t],\n\t\t\"responseFields\": [\n\t\t\t\"BVcustom.X_FIELD1\",\n\t\t\t\"BVcustom.X_FIELD3\"\n\t\t]\n\t}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://commerce-preview.comdx.demo.com:30920/search/resources/api/v2/documents/profiles/X_findProductsByCategory_BVcustom",
+							"protocol": "http",
+							"host": [
+								"commerce-preview",
+								"comdx",
+								"demo",
+								"com"
+							],
+							"port": "30920",
+							"path": [
+								"search",
+								"resources",
+								"api",
+								"v2",
+								"documents",
+								"profiles",
+								"X_findProductsByCategory_BVcustom"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Search Profile",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "passw0rd",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "spiuser",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://commerce-preview.comdx.demo.com:30920/search/resources/api/v2/documents/profiles/X_findProductsByCategory_BVcustom",
+							"protocol": "http",
+							"host": [
+								"commerce-preview",
+								"comdx",
+								"demo",
+								"com"
+							],
+							"port": "30920",
+							"path": [
+								"search",
+								"resources",
+								"api",
+								"v2",
+								"documents",
+								"profiles",
+								"X_findProductsByCategory_BVcustom"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Verify Custom Data using Custom Profile",
+			"item": [
+				{
+					"name": "Get Products By Category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://commerce-preview.comdx.demo.com/search/resources/api/v2/products?storeId=11&categoryId=10502&limit=12&offset=0&contractId=-11005&currency=USD&langId=-1&profileName=X_findProductsByCategory_BVcustom",
+							"protocol": "https",
+							"host": [
+								"commerce-preview",
+								"comdx",
+								"demo",
+								"com"
+							],
+							"path": [
+								"search",
+								"resources",
+								"api",
+								"v2",
+								"products"
+							],
+							"query": [
+								{
+									"key": "storeId",
+									"value": "11"
+								},
+								{
+									"key": "categoryId",
+									"value": "10502"
+								},
+								{
+									"key": "limit",
+									"value": "12"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "contractId",
+									"value": "-11005"
+								},
+								{
+									"key": "currency",
+									"value": "USD"
+								},
+								{
+									"key": "langId",
+									"value": "-1"
+								},
+								{
+									"key": "profileName",
+									"value": "X_findProductsByCategory_BVcustom"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,57 @@
+{
+  "name": "BVcustom",
+  "description": "This is the connector for the BV custom processing",
+  "pipes": [
+    {
+      "name": "_Template-Schema"
+    },
+    {
+      "name": "_Template-Groovy-DatabaseETL",
+      "properties": [
+        {
+          "name": "Database Driver Location(s)",
+          "value": "${AUTH_JDBC_DRIVER_LOCATION}",
+          "scope": {
+            "name": "Database Connection Pool",
+            "type": "CONTROLLER_SERVICE"
+          }
+        },
+        {
+          "name": "Database Driver Class Name ",
+          "value": "${AUTH_JDBC_DRIVER_CLASSNAME}",
+          "scope": {
+            "name": "Database Connection Pool",
+            "type": "CONTROLLER_SERVICE"
+          }
+        },
+        {
+          "name": "Database Connection URL",
+          "value": "${AUTH_JDBC_URL}",
+          "scope": {
+            "name": "Database Connection Pool",
+            "type": "CONTROLLER_SERVICE"
+          }
+        },
+        {
+          "name": "Database User",
+          "value": "${AUTH_JDBC_USER_NAME}",
+          "scope": {
+            "name": "Database Connection Pool",
+            "type": "CONTROLLER_SERVICE"
+          }
+        },
+        {
+          "name": "Password",
+          "value": "${AUTH_JDBC_USER_PASSWORD}",
+          "scope": {
+            "name": "Database Connection Pool",
+            "type": "CONTROLLER_SERVICE"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Terminal"
+    }
+  ]
+}

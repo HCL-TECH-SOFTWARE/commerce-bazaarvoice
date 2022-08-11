@@ -1,0 +1,394 @@
+<%--
+	=================================================================
+	Copyright [2021] [HCL Technologies]
+
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+
+		http://www.apache.org/licenses/LICENSE-2.0
+
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+	=================================================================
+--%>
+
+<!-- START: Bazaarvoice SEO SDK Insert Area -->
+
+<%@page import="com.bazaarvoice.seo.sdk.model.*"%>
+<%@page import="com.bazaarvoice.seo.sdk.*"%>
+<%@page import="com.bazaarvoice.seo.sdk.config.*"%>
+
+<c:set var="onlineStore" value="${cachedOnlineStoreMap[key1]}"/>
+<c:if test="${empty onlineStore}"><!-- Online store is empty initially -->
+	<wcf:rest var="queryStoreInfoResult" url="store/{storeId}/online_store" scope="request" cached="true">
+		<wcf:var name="storeId" value="${param.storeId}" encode="true"/>
+	</wcf:rest>
+	<c:set var="onlineStore" value="${queryStoreInfoResult.resultList[0]}"/>
+	<wcf:set target = "${cachedOnlineStoreMap}" key="${key1}" value="${onlineStore}"/>
+</c:if><!-- tabName : ${tabName} -->
+<c:forEach var="storeConfEntry" items="${onlineStore.userData}" >
+	<c:set var="storeConfEntryName" value="${storeConfEntry.key}" />
+	<c:set var="storeConfBvContentOutputName" value="com.bazaarvoice.commerce.store.${tabName}bvContentOutput" />
+	<c:set var="storeConfContentTypeName" value="com.bazaarvoice.commerce.store.${tabName}contentType" />
+	<c:if test="${!empty storeConfEntryName && fn:startsWith(storeConfEntryName, storeConfBvContentOutputName)}">
+		<c:set var="bvContentOutput" value="${storeConfEntry.value}" />
+	</c:if>
+	<c:if test="${!empty storeConfEntryName && fn:startsWith(storeConfEntryName, 'com.bazaarvoice.commerce.store.subjectType')}">
+		<c:set var="subjectType" value="${storeConfEntry.value}" />
+	</c:if>
+	<c:if test="${!empty storeConfEntryName && fn:startsWith(storeConfEntryName, storeConfContentTypeName)}">
+		<c:set var="contentType" value="${storeConfEntry.value}" />
+	</c:if>
+	<c:if test="${!empty storeConfEntryName && fn:startsWith(storeConfEntryName, 'com.bazaarvoice.commerce.store.seoSdkEnabled')}">
+		<c:set var="seoSdkEnabled" value="${storeConfEntry.value}" />
+	</c:if>
+	<c:if test="${!empty storeConfEntryName && fn:startsWith(storeConfEntryName, 'com.bazaarvoice.commerce.store.loadSeoFilesLocally')}">
+		<c:set var="loadSeoFilesLocally" value="${storeConfEntry.value}" />
+	</c:if>
+	<c:if test="${!empty storeConfEntryName && fn:startsWith(storeConfEntryName, 'com.bazaarvoice.commerce.store.executionTimeout')}">
+		<c:set var="executionTimeout" value="${storeConfEntry.value}" />
+	</c:if>
+	<c:if test="${!empty storeConfEntryName && fn:startsWith(storeConfEntryName, 'com.bazaarvoice.commerce.store.executionTimeoutBot')}">
+		<c:set var="executionTimeoutBot" value="${storeConfEntry.value}" />
+	</c:if>
+	<c:if test="${!empty storeConfEntryName && fn:startsWith(storeConfEntryName, 'com.bazaarvoice.commerce.store.cloudKey')}">
+		<c:set var="cloudKey" value="${storeConfEntry.value}" />
+	</c:if>
+	<c:if test="${!empty storeConfEntryName && fn:startsWith(storeConfEntryName, 'com.bazaarvoice.commerce.store.staging')}">
+		<c:set var="staging" value="${storeConfEntry.value}" />
+	</c:if>
+</c:forEach>	
+<!--  bvContentOutput : ${bvContentOutput}  contentType : ${contentType} -->
+<%-- ***ProductDetailsInsertArea.jspf***  --%>
+
+
+
+<!-- *** ProductDetailsInsertArea.jspf - Properties*** 
+ 	 Below properties are being used for ProductDetailsInsertArea.jspf. 
+ 	 If these are needed for any other jspf's move these out of c:if-->
+<c:if test="${ pageName eq 'ProductDetails_'}">
+	<c:forEach var="storeConfEntry" items="${onlineStore.userData}" >
+		<c:set var="storeConfEntryName" value="${storeConfEntry.key}" />
+		<c:if test="${!empty storeConfEntryName && fn:startsWith(storeConfEntryName, 'com.bazaarvoice.commerce.store.pageNumber')}">
+			<c:set var="pageNumber" value="${storeConfEntry.value}" />
+		</c:if>
+		<c:if test="${!empty storeConfEntryName && fn:startsWith(storeConfEntryName, 'com.bazaarvoice.commerce.store.contentSubType')}">
+			<c:set var="contentSubType" value="${storeConfEntry.value}" />
+		</c:if>
+		<c:if test="${!empty storeConfEntryName && fn:startsWith(storeConfEntryName, 'com.bazaarvoice.commerce.store.connectTimeout')}">
+			<c:set var="connectTimeout" value="${storeConfEntry.value}" />
+		</c:if>
+		<c:if test="${!empty storeConfEntryName && fn:startsWith(storeConfEntryName, 'com.bazaarvoice.commerce.store.socketTimeout')}">
+			<c:set var="socketTimeout" value="${storeConfEntry.value}" />
+		</c:if>
+		<c:if test="${!empty storeConfEntryName && fn:startsWith(storeConfEntryName, 'com.bazaarvoice.commerce.store.includeDisplayIntegrationCode')}">
+			<c:set var="includeDisplayIntegrationCode" value="${storeConfEntry.value}" />
+		</c:if>
+		<c:if test="${!empty storeConfEntryName && fn:startsWith(storeConfEntryName, 'com.bazaarvoice.commerce.store.crawlerAgentPattern')}">
+			<c:set var="crawlerAgentPattern" value="${storeConfEntry.value}" />
+		</c:if>
+		<c:if test="${!empty storeConfEntryName && fn:startsWith(storeConfEntryName, 'com.bazaarvoice.commerce.store.testing')}">
+			<c:set var="testing" value="${storeConfEntry.value}" />
+		</c:if>
+		<c:if test="${!empty storeConfEntryName && fn:startsWith(storeConfEntryName, 'com.bazaarvoice.commerce.store.proxyHost')}">
+			<c:set var="proxyHost" value="${storeConfEntry.value}" />
+		</c:if>
+		<c:if test="${!empty storeConfEntryName && fn:startsWith(storeConfEntryName, 'com.bazaarvoice.commerce.store.proxyPort')}">
+			<c:set var="proxyPort" value="${storeConfEntry.value}" />
+		</c:if>
+		<c:if test="${!empty storeConfEntryName && fn:startsWith(storeConfEntryName, 'com.bazaarvoice.commerce.store.charset')}">
+			<c:set var="charset" value="${storeConfEntry.value}" />
+		</c:if>
+		<c:if test="${!empty storeConfEntryName && fn:startsWith(storeConfEntryName, 'com.bazaarvoice.commerce.store.sslEnabled')}">
+			<c:set var="sslEnabled" value="${storeConfEntry.value}" />
+		</c:if>
+		<c:if test="${!empty storeConfEntryName && fn:startsWith(storeConfEntryName, 'com.bazaarvoice.commerce.store.botDetection')}">
+			<c:set var="botDetection" value="${storeConfEntry.value}" />
+		</c:if>
+	</c:forEach>
+</c:if>
+
+<%
+    String mode = (String)pageContext.getAttribute("mode");
+    
+    // Content output type to be retrieved
+    String bvContentOutput = (String)pageContext.getAttribute("bvContentOutput");
+    
+    // BV Parameters
+    String userAgent = (String)pageContext.getAttribute("userAgent");
+    String baseURI = (String)pageContext.getAttribute("baseURI");
+    String pageURI = (String)pageContext.getAttribute("pageURI");
+    String subjectId = (String)pageContext.getAttribute("subjectId");
+    String pageNumber = (String)pageContext.getAttribute("pageNumber");
+    String contentType = (String)pageContext.getAttribute("contentType");
+    String subjectType = (String)pageContext.getAttribute("subjectType");
+    String contentSubType = (String)pageContext.getAttribute("contentSubType");
+    
+    // Legacy, inactive properties.
+    //
+    // These are only retained to stop old client code from breaking when the
+    // SDK version is updated. They have no effect if set.
+    String botDetection = (String)pageContext.getAttribute("botDetection"); // Property removed starting with version 2.1.0.1
+    
+    // Active configuration properties.
+    String bvRootFolder = (String)pageContext.getAttribute("bvRootFolder");
+    String cloudKey = (String)pageContext.getAttribute("cloudKey");
+    String loadSeoFilesLocally = (String)pageContext.getAttribute("loadSeoFilesLocally");
+    String localSeoFileRoot = (String)pageContext.getAttribute("localSeoFileRoot");
+    String connectTimeout = (String)pageContext.getAttribute("connectTimeout");
+    String socketTimeout = (String)pageContext.getAttribute("socketTimeout");
+    String includeDisplayIntegrationCode = (String)pageContext.getAttribute("includeDisplayIntegrationCode");
+    String crawlerAgentPattern = (String)pageContext.getAttribute("crawlerAgentPattern");
+    String seoSdkEnabled = (String)pageContext.getAttribute("seoSdkEnabled");
+    String staging = (String)pageContext.getAttribute("staging");
+    String testing = (String)pageContext.getAttribute("testing");
+    String executionTimeout = (String)pageContext.getAttribute("executionTimeout");
+    String executionTimeoutBot = (String)pageContext.getAttribute("executionTimeoutBot");
+    String proxyHost = (String)pageContext.getAttribute("proxyHost");
+    String proxyPort = (String)pageContext.getAttribute("proxyPort");
+    String charset = (String)pageContext.getAttribute("charset");
+    String sslEnabled = (String)pageContext.getAttribute("sslEnabled");  
+              
+               
+    //
+    // Set the BVSdkConfiguration client instance configuration. 
+    //
+    BVConfiguration bvConfig = new BVSdkConfiguration();
+    
+    // BOT_DETECTION property
+    // This property has been deprecated starting with version 2.1.0.1
+    // Property is still retained to stop old client code from breaking when the
+    // SDK version is updated. They have no effect if set.
+    if (botDetection != null && !botDetection.isEmpty()) {
+        bvConfig.addProperty(BVClientConfig.BOT_DETECTION, botDetection); // false is the default value. False disables bot detection. BV recommends you use bot detection only in special ocassions.
+    }
+    
+    // BV_ROOT_FOLDER property
+    if (bvRootFolder != null && !bvRootFolder.isEmpty()) {
+        bvConfig.addProperty(BVClientConfig.BV_ROOT_FOLDER, bvRootFolder); // 'feeds' Contact BV to obtain the value you need for this property, also knows as the display code. 
+    }
+            
+    // CLOUD_KEY property
+    if (cloudKey != null && !cloudKey.isEmpty()) {
+        bvConfig.addProperty(BVClientConfig.CLOUD_KEY, cloudKey);
+    }
+        
+    // LOAD_SEO_FILES_LOCALLY property
+    // If the LOAD_SEO_FILES_LOCALLY property is set to true, then the SEO contents will be retrieved 
+    // from the local filesystem rather than via an HTTP request. Enable this flag if you are retrieving 
+    // your daily SEO feed from the Bazaarvoice FTP server and expanding it into a directory accessible 
+    // through your local filesystem. You must also set the root directory in the LOCAL_SEO_FILE_ROOT property.
+    if (loadSeoFilesLocally != null && !loadSeoFilesLocally.isEmpty()) {
+        bvConfig.addProperty(BVClientConfig.LOAD_SEO_FILES_LOCALLY, loadSeoFilesLocally); // true
+    }
+    
+    // LOCAL_SEO_FILE_ROOT property
+    if (localSeoFileRoot != null && !localSeoFileRoot.isEmpty()) {
+        bvConfig.addProperty(BVClientConfig.LOCAL_SEO_FILE_ROOT, localSeoFileRoot); // '/bv_bvp-ibm-zobrist-c2013sandbox1_main_site_seo' // should make this configurable
+    }
+    
+    // CONNECT_TIMEOUT property
+    if (connectTimeout != null && !connectTimeout.isEmpty()) {
+        bvConfig.addProperty(BVClientConfig.CONNECT_TIMEOUT, connectTimeout); // 2000ms is the default value (to match BVClient.EXECUTION_TIMEOUT_BOT).
+    }
+    
+    // SOCKET_TIMEOUT property
+    if (socketTimeout != null && !socketTimeout.isEmpty()) {
+        bvConfig.addProperty(BVClientConfig.SOCKET_TIMEOUT, socketTimeout); // 2000ms is the default value (to match BVClient.EXECUTION_TIMEOUT_BOT).
+    }
+    
+    // INCLUDE_DISPLAY_INTEGRATION_CODE property
+    if (includeDisplayIntegrationCode != null && !includeDisplayIntegrationCode.isEmpty()) {
+        bvConfig.addProperty(BVClientConfig.INCLUDE_DISPLAY_INTEGRATION_CODE, includeDisplayIntegrationCode); // research this
+    }
+    
+    // CRAWLER_AGENT_PATTERN property
+    if (crawlerAgentPattern != null && !crawlerAgentPattern.isEmpty()) {
+        bvConfig.addProperty(BVClientConfig.CRAWLER_AGENT_PATTERN, crawlerAgentPattern); // research this
+    }
+     
+    // SEO_SDK_ENABLED property
+    if (seoSdkEnabled != null && !seoSdkEnabled.isEmpty()) {
+        bvConfig.addProperty(BVClientConfig.SEO_SDK_ENABLED, seoSdkEnabled); // true is the default value
+    }
+    
+    // STAGING property
+    if (staging != null && !staging.isEmpty()) {
+        bvConfig.addProperty(BVClientConfig.STAGING, staging); // MAKE THIS CONFIGURABLE. Set to true for staging environment data.
+    }
+    
+    // TESTING property
+    if (testing != null && !testing.isEmpty()) {
+        // bvConfig.addProperty(BVClientConfig.TESTING, testing); // MAKE THIS CONFIGURABLE. Set to true for testing environment data.
+    }
+    
+    // EXECUTION_TIMEOUT property
+    if (executionTimeout != null && !executionTimeout.isEmpty()) { 
+        bvConfig.addProperty(BVClientConfig.EXECUTION_TIMEOUT, executionTimeout); // 500ms is the default value. If this value is set to 0ms, no connection attempts will occur.
+    }
+    
+    // EXECUTION_TIMEOUT_BOT property
+    if (executionTimeoutBot != null && !executionTimeoutBot.isEmpty()) {
+        bvConfig.addProperty(BVClientConfig.EXECUTION_TIMEOUT_BOT, executionTimeoutBot); // Default value of 2000ms, which is the execution timeout intended for search bots.  The minimum configurable value for this timeout is 100ms.
+    }
+    
+    // PROXY_HOST property
+    if (proxyHost != null && !proxyHost.isEmpty()) {
+    	bvConfig.addProperty(BVClientConfig.PROXY_HOST, proxyHost);
+    }
+    
+    // PROXY_PORT property
+    if (proxyPort != null && !proxyPort.isEmpty()) {
+    	bvConfig.addProperty(BVClientConfig.PROXY_PORT, proxyPort);
+    }
+    
+    // CHARSET property
+    if (charset != null && !charset.isEmpty()) {
+        bvConfig.addProperty(BVClientConfig.CHARSET, sslEnabled); // Enable or disable custom character set support. If not recognized, it will use the default.
+    }
+    
+    // SSL_ENABLED property
+    if (sslEnabled != null && !sslEnabled.isEmpty()) {
+        bvConfig.addProperty(BVClientConfig.SSL_ENABLED, sslEnabled); // Enable or disable SSL support.
+    }
+    
+    //
+    // Set the BVParameters instance. 
+    //  
+    BVParameters bvParameters = new BVParameters();
+        
+    // UserAgent parameter
+    if (userAgent != null && !userAgent.isEmpty()) {
+        bvParameters.setUserAgent(userAgent); // Taken from HTTPServletRequest, required parameter. // request.getHeader("User-Agent")
+    }
+    
+    // BaseURI parameter    
+    // URL that contains complete information about the product, category, and page number. 
+    // The URL can be absolute or relative. The URL can also be a new Conversations-supported 
+    // URL that can contain bvpage query parameters.
+    if (baseURI != null && !baseURI.isEmpty()) {
+        bvParameters.setBaseURI(baseURI); // Research this // for example Example-Myshco.jsp
+    }
+    
+    // PageURI parameter
+    if (pageURI != null && !pageURI.isEmpty()) {
+        bvParameters.setPageURI(pageURI); // Research this // for example request.getRequestURI() + "?" + request.getQueryString()
+    }
+    
+    // SubjectId parameter
+    // Identifier for the subject to retrieve the content.
+    // If SubjectType is Product, for example, with reviews or questions and answers, this value will be productId. 
+    // If SubjectType is Category, this value will be reviewId.
+    if (subjectId != null && !subjectId.isEmpty()) {
+        bvParameters.setSubjectId(subjectId);
+    }
+    
+    // PageNumber parameter
+    if (pageNumber != null && !pageNumber.isEmpty()) {
+        bvParameters.setPageNumber(pageNumber);
+    }
+                                
+    // ContentType parameter
+    if (contentType != null && !contentType.isEmpty()) {
+        
+        // Ratings and reviews content type
+        if (contentType.equals("reviews"))
+            bvParameters.setContentType(ContentType.REVIEWS);
+        
+        // Reviews page content type        
+        if (contentType.equals("reviews page"))
+            bvParameters.setContentType(ContentType.REVIEWSPAGE);
+        
+        // Q&A content type         
+        if (contentType.equals("questions"))
+            bvParameters.setContentType(ContentType.QUESTIONS);
+        
+        // Questions page content type      
+        if (contentType.equals("questions page"))
+            bvParameters.setContentType(ContentType.QUESTIONSPAGE);
+        
+        // Stories content type     
+        if (contentType.equals("stories"))
+            bvParameters.setContentType(ContentType.STORIES);
+        
+        // Stories page content type        
+        if (contentType.equals("stories page"))
+            bvParameters.setContentType(ContentType.STORIESPAGE);
+        
+        // Universal content type           
+        if (contentType.equals("universal"))
+            bvParameters.setContentType(ContentType.UNIVERSAL);
+    }
+                  
+    // SubjectType parameter
+    if (subjectType != null && !subjectType.isEmpty()) { 
+    
+        if (subjectType.equals("product"))          
+            bvParameters.setSubjectType(SubjectType.PRODUCT);
+            
+        if (subjectType.equals("category"))                 
+            bvParameters.setSubjectType(SubjectType.CATEGORY);
+            
+        if (subjectType.equals("entry"))            
+            bvParameters.setSubjectType(SubjectType.ENTRY);
+            
+        if (subjectType.equals("detail"))           
+            bvParameters.setSubjectType(SubjectType.DETAIL);
+    }
+    
+    // ContentSubType parameter
+    if (contentSubType != null && !contentSubType.isEmpty()) {
+    
+        if (contentSubType.equals(""))
+            bvParameters.setContentSubType(ContentSubType.NONE);
+            
+        if (contentSubType.equals("stories list"))
+            bvParameters.setContentSubType(ContentSubType.STORIES_LIST);
+            
+        if (contentSubType.equals("stories grid"))
+            bvParameters.setContentSubType(ContentSubType.STORIES_GRID);
+    }
+                        
+    //
+    // Retrieve bazaarvoice content based on the configuration and parameters provided. 
+    //
+    BVUIContent bvManagedUiContent = new BVManagedUIContent(bvConfig);
+    String sContent = "";   
+    
+    if (bvContentOutput != null && !bvContentOutput.isEmpty()) {
+    
+        if (bvContentOutput.equalsIgnoreCase("content")) {
+            // This method returns bazaarvoice managed content.
+            sContent = bvManagedUiContent.getContent(bvParameters);
+        }
+        else if (bvContentOutput.equalsIgnoreCase("aggregateRating")) 
+        {
+            // This method returns bazaarvoice aggregate rating content.
+            sContent = bvManagedUiContent.getAggregateRating(bvParameters);
+        }
+        else if (bvContentOutput.equalsIgnoreCase("reviews")) {
+            // This method returns bazaarvoice review content.
+            sContent = bvManagedUiContent.getReviews(bvParameters);
+        }
+        else if (bvContentOutput.equalsIgnoreCase("postProcess")) {    
+            // This method returns bazaarvoice post process content.
+            sContent = bvManagedUiContent.getReviews(bvParameters);
+        }
+        else {
+            // If content output parameter does not exist, then try to get managed content by default.
+            sContent = bvManagedUiContent.getContent(bvParameters);
+        }
+    }
+    else {  
+        // If no content output is specified, then try to get managed content by default.
+        sContent = bvManagedUiContent.getContent(bvParameters);
+    }
+%>
+
+<%=sContent%>
+
+<!-- END: Bazaarvoice SEO SDK Insert Area -->

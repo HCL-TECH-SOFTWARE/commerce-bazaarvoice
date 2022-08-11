@@ -1,0 +1,161 @@
+<%--
+	=================================================================
+	Copyright [2021] [HCL Technologies]
+
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+
+		http://www.apache.org/licenses/LICENSE-2.0
+
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+	=================================================================
+--%>
+
+<!-- START: Bazaarvoice Product Detail Insert Area -->
+<meta itemprop="name" content="ProductName">
+<div itemscope itemtype="https://schema.org/Product">
+
+<c:set var="onlineStore" value="${cachedOnlineStoreMap[key1]}"/>
+<c:if test="${empty onlineStore}"><!-- Online store is empty initially -->
+	<wcf:rest var="queryStoreInfoResult" url="store/{storeId}/online_store" scope="request" cached="true">
+		<wcf:var name="storeId" value="${param.storeId}" encode="true"/>
+	</wcf:rest>
+	<c:set var="onlineStore" value="${queryStoreInfoResult.resultList[0]}"/>
+	<wcf:set target = "${cachedOnlineStoreMap}" key="${key1}" value="${onlineStore}"/>
+</c:if>
+
+<c:forEach var="storeConfEntry" items="${onlineStore.userData}" >
+	<c:set var="storeConfEntryName" value="${storeConfEntry.key}" />
+	<c:if test="${!empty storeConfEntryName && fn:startsWith(storeConfEntryName, 'com.bazaarvoice.commerce.store.seo_url')}">
+		<c:set var="bvSeoUrl" value="${storeConfEntry.value}" />
+	</c:if>
+	<c:if test="${!empty storeConfEntryName && fn:startsWith(storeConfEntryName, 'com.bazaarvoice.commerce.store.seo_enabled')}">
+		<c:set var="bvSeoEnabled" value="${storeConfEntry.value}" />
+	</c:if>
+	<c:if test="${!empty storeConfEntryName && fn:startsWith(storeConfEntryName, 'com.bazaarvoice.commerce.store.local_seo_file_root')}">
+		<c:set var="bvLocalSeoFileRoot" value="${storeConfEntry.value}" />
+	</c:if>
+</c:forEach>	
+
+<c:choose>
+    <c:when test="${!empty bvSeoUrl}">
+        <c:set var="bvSeoUrl" value="${fn:replace(bvSeoUrl, '$locale$', locale)}"/>
+        <c:set var="bvSeoUrl" value="${fn:replace(bvSeoUrl, '$storeId$', param.storeId)}"/>
+        <c:set var="bvSeoUrl" value="${fn:replace(bvSeoUrl, '$catalogId$', bvMasterCatalogId)}"/>
+        <c:set var="bvSeoUrl" value="${fn:replace(bvSeoUrl, '$productId$', productId)}"/>
+    </c:when>
+    <c:otherwise>
+        <c:set var="bvSeoUrl" value="BV_SEO_URL_MISSING.js"/>
+    </c:otherwise>
+</c:choose>
+
+<c:set var="mode" value="${displayType}" scope="request"/>
+<c:set var="bvProductId" value="${bvMasterCatalogId}_${storeId}_${fn:toLowerCase(productId)}"/>
+
+<c:if test="${empty mode}">
+    <c:set var="mode" value="summary" scope="request"/>
+</c:if>
+        
+<c:choose>
+    <c:when test="${mode eq 'summary'}">
+        <div data-bv-show="rating_summary" data-bv-productId="${bvProductId}"></div>
+    </c:when>
+    <c:when test="${mode eq 'review'}">
+        <!-- START: Bazaarvoice SEO SDK BVRRContainer -->
+	  <div id="review_tab" >
+        <div data-bv-show="reviews" data-bv-productId="${bvProductId}">
+	        <c:if test="${!empty bvSeoEnabled and fn:toLowerCase(bvSeoEnabled) eq 'true'}">
+                <%-- SEO SDK approach to include SEO feed --%>
+			    <%-- BV managed content output --%>
+			    <c:set var="tabName" value="reviews_"/>
+			   	<c:set var="pageName" value="BVWidgetUI_"/>
+			    
+			    <%-- BV Parameters --%>
+				<c:set var="localSeoFileRoot" value="${bvLocalSeoFileRoot}" />
+			    <c:set var="userAgent" value="${header['user-agent']}"/>
+			    <%-- This property has been removed since the SEO SDK version 2.1.0.1 --%>
+			    <%-- <c:set var="botDetection" value="false"/> --%>
+			    <c:set var="subjectId" value="${bvMasterCatalogId}_${storeId}_${fn:toLowerCase(productId)}"/>
+			    <c:set var="bvRootFolder" value="Main_Site-${locale}"/>
+			    <c:set var="baseURI" value="${requestScope['javax.servlet.forward.request_uri']}?${requestScope['javax.servlet.forward.query_string']}"/>
+			    <c:set var="pageURI" value="${requestScope['javax.servlet.forward.request_uri']}?${requestScope['javax.servlet.forward.query_string']}"/>
+			    <%@include file="SDKSEOInsertArea.jspf"%>
+	        </c:if>
+	        </div>
+        </div>
+        <!-- END: Bazaarvoice SEO SDK BVRRContainer -->
+    </c:when>
+    <c:when test="${mode eq 'qa'}">
+        <!-- START: Bazaarvoice SEO SDK BVQAContainer -->
+	  <div id="questions_tab" >
+        <div data-bv-show="questions" data-bv-productId="${bvProductId}">     
+	        <c:if test="${!empty bvSeoEnabled and fn:toLowerCase(bvSeoEnabled) eq 'true'}"> 
+                <%-- SEO SDK approach to include SEO feed --%>
+                <%-- BV managed content output --%>
+                <c:set var="tabName" value="questions_"/>
+			    <c:set var="pageName" value="BVWidgetUI_"/>
+                
+                <%-- BV Parameters --%>
+				<c:set var="localSeoFileRoot" value="${bvLocalSeoFileRoot}" />
+			    <c:set var="userAgent" value="${header['user-agent']}"/>
+			    <c:set var="subjectId" value="${bvMasterCatalogId}_${storeId}_${fn:toLowerCase(productId)}"/>
+			    <c:set var="bvRootFolder" value="Main_Site-${locale}"/>
+			    <c:set var="baseURI" value="${requestScope['javax.servlet.forward.request_uri']}?${requestScope['javax.servlet.forward.query_string']}"/>
+			    <c:set var="pageURI" value="${requestScope['javax.servlet.forward.request_uri']}?${requestScope['javax.servlet.forward.query_string']}"/>
+			    <%@include file="SDKSEOInsertArea.jspf"%>
+	        </c:if>
+	        </div> 
+        </div>
+        <!-- END: Bazaarvoice SEO SDK BVQAContainer -->
+    </c:when>
+</c:choose>
+
+<c:if test="${(mode eq 'summary' || mode eq 'review') && (empty pageloaded_BVWidget || !pageloaded_BVWidget)}">
+    <script type="text/javascript">
+        //Tabbed version
+       
+            productId: '${bvMasterCatalogId}_${storeId}_${fn:toLowerCase(productId)}'
+        });
+        
+        // Non-tabbed version
+        
+    </script>
+    <c:set var="pageloaded_BVWidget" value="true" scope="request"/>
+</c:if>
+
+<c:if test="${(mode eq 'qa') && (empty pageloaded_BVQAWidget || !pageloaded_BVQAWidget)}">
+    <script type="text/javascript">
+        //Tabbed version
+        
+            productId: '${bvMasterCatalogId}_${storeId}_${fn:toLowerCase(productId)}'
+        });
+        
+        // Non-tabbed version
+        
+    </script>
+    <c:set var="pageloaded_BVQAWidget" value="true" scope="request"/>
+</c:if>
+<script>
+            
+            window.bvCallback = function (BV) {
+	  
+              BV.reviews.on('show', function () {
+                 
+                //tab2 means Reviews tab. 
+                 ProductTabJS.selectTab('tab2');
+              });
+	     
+              BV.questions.on('show', function () {
+                
+                //tab3 means Question and Answers tab.
+                ProductTabJS.selectTab('tab3');
+              });
+            };
+          </script>
+</div>
+<!-- END: Bazaarvoice Product Detail Insert Area -->

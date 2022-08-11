@@ -1,0 +1,57 @@
+<%--
+	=================================================================
+	Copyright [2021] [HCL Technologies]
+
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+
+		http://www.apache.org/licenses/LICENSE-2.0
+
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+	=================================================================
+--%>
+
+<!-- BEGIN PriceFacet.jspf -->
+
+<wcf:useBean var="ratingFacetList" classname="java.util.ArrayList"/>
+
+<c:forEach var="item" items="${facetField.entry}" varStatus="aStatus">
+	<c:if test="${item.count > 0}">
+		<wcf:useBean var="values" classname="java.util.HashMap"/>
+
+		<c:set var="rangeLabel" value="${fn:replace(item.label,'([','')}" />
+		<c:set var="rangeLabel" value="${fn:replace(rangeLabel,'})','')}" />
+		<c:set var="rangeLabel" value="${fn:replace(rangeLabel,'}','')}" />
+		<c:set var="rangeLow" value="${fn:substringBefore(rangeLabel,'.0 TO ')}" />
+		
+		<c:set var="facetLabel" value="${rangeLow} Star" />				
+		
+		<wcf:set target="${values}" key="name" value="${facetLabel}" />
+		<wcf:set target="${values}" key="count" value="${item.count}" />
+		<wcf:set target="${values}" key="value" value="${item.value}" />
+		<wcf:set target="${values}" key="id" value="${item.extendedData['uniqueId']}"/>
+		<wcf:set target="${ratingFacetList}" value="${values}" />
+		
+		<c:remove var="values" />
+		<c:remove var="facetLabel" />
+		<c:remove var="rangeLabel" />
+		<c:remove var="rangeLow" />
+	</c:if>
+</c:forEach>
+
+<c:set var="facetLabel" value="RATING" />
+<wcf:useBean var="values" classname="java.util.HashMap"/>
+<wcf:set target="${values}" key="name" value="${facetLabel}" />
+<wcf:set target="${values}" key="facets" value="${ratingFacetList}"/>
+<wcf:set target="${values}" key="multipleSelection" value="${facetField.extendedData['allowMultipleValueSelection']}"/>
+<wcf:set target="${values}" key="maxVal" value="${facetField.extendedData['maximumValuesToDisplay']}"/>
+<wcf:set target="${values}" key="allValReturned" value="${facetField.extendedData['allValuesReturned']}"/>
+<wcf:set target="${intermediateFacetArray}" value="${values}"/>
+<c:remove var="values"/>
+<c:remove var="ratingFacetList"/>
+<!-- END PriceFacet.jspf -->

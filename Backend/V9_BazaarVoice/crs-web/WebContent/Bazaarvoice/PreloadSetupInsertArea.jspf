@@ -1,0 +1,76 @@
+<%--
+	=================================================================
+	Copyright [2021] [HCL Technologies]
+
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+
+		http://www.apache.org/licenses/LICENSE-2.0
+
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+	=================================================================
+--%>
+
+<!-- BEGIN PreloadSetupInsertArea.jspf -->
+<%@ taglib uri="http://commerce.ibm.com/foundation-fep/stores" prefix="wcst" %>
+	<c:set var="key1" value="store/${storeId}/online_store"/>
+	<c:set var="onlineStore" value="${cachedOnlineStoreMap[key1]}"/>
+	<c:if test="${empty onlineStore}">
+		<wcf:rest var="queryStoreInfoResult" url="store/{storeId}/online_store" scope="request" cached="true">
+			<wcf:var name="storeId" value="${storeId}" encode="true"/>
+		</wcf:rest>
+		<c:set var="onlineStore" value="${queryStoreInfoResult.resultList[0]}"/>
+		<wcf:set target = "${cachedOnlineStoreMap}" key="${key1}" value="${onlineStore}"/>
+	</c:if>
+<wcf:useBean var="storeList" classname="java.util.ArrayList"/>
+	<c:set var="storeId" value="${storeId}" />
+	<c:if test="${empty storeList}">
+		<wcf:set target="${storeList}" value="${storeId}" />
+		<c:if test="${!empty onlineStore.relatedStores}">
+			<c:forEach var="item" items="${onlineStore.relatedStores}">
+				<c:if test="${item.relationshipType == '-11' && storeId != item.relatedStoreId}" >
+					<wcf:set target="${storeList}" value="${item.relatedStoreId}" />
+				</c:if>
+			</c:forEach>
+		</c:if>
+	</c:if>
+
+	<c:if test="${!empty storeList}">
+		<c:forEach var="relatedStoreId" items="${storeList}">
+			<%-- We have onlineStore object for current store already retrieved in above getData call.. Avoid it...--%>
+			<c:if test="${!empty relatedStoreId}">
+				<c:if test="${relatedStoreId eq storeId}">
+					<c:forEach var="storeConfEntry" items="${onlineStore.userData}" >
+						<c:set var="storeConfEntryName" value="${storeConfEntry.key}" />
+						<c:if test="${!empty storeConfEntryName && fn:startsWith(storeConfEntryName, 'com.bazaarvoice.commerce.store.load_url')}">
+							<c:set var="bvInitialLoadJS" value="${storeConfEntry.value}" />
+						</c:if>
+						<c:if test="${!empty storeConfEntryName && fn:startsWith(storeConfEntryName, 'com.bazaarvoice.commerce.store.storeEnvironment')}">
+							<c:set var="environment" value="${storeConfEntry.value}" />
+						</c:if>
+					</c:forEach>
+				</c:if>
+			</c:if>
+		</c:forEach>
+	</c:if>
+<c:choose>
+    <c:when test="${!empty bvInitialLoadJS}">
+        <c:set var="bvInitialLoadJS" value="${fn:replace(bvInitialLoadJS, '$locale$', locale)}"/>
+        <c:set var="bvInitialLoadJS" value="${fn:replace(bvInitialLoadJS, '$environment$', environment)}"/>
+    </c:when>
+    <c:otherwise>           
+        <%-- Needed since Widget JS load logic is not smart enough to check if "_plg:javaScriptInclude" asset variables are present --%>
+        <c:set var="bvInitialLoadJS" value="BV_LOAD_URL_MISSING.js"/>
+    </c:otherwise>
+</c:choose>
+
+<script async src="${bvInitialLoadJS}"></script>
+
+<%-- Search for the Master catalogId being used for a given storeId --%>
+<%@ include file="/Bazaarvoice/BVSearchForMasterCatalogId.jspf" %>
+<!-- END PreloadSetupInsertArea.jspf -->

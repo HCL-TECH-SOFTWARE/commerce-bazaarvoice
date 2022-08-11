@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	=================================================================
+	Copyright [2021] [HCL Technologies]
+
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+
+		http://www.apache.org/licenses/LICENSE-2.0
+
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+	=================================================================
+-->
+
+<_config:DataloadBusinessObjectConfiguration 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.ibm.com/xmlns/prod/commerce/foundation/config ../../../WC/xml/config/xsd/wc-dataload-businessobject.xsd" 
+	xmlns:_config="http://www.ibm.com/xmlns/prod/commerce/foundation/config">
+
+  <_config:DataLoader className="com.ibm.commerce.foundation.dataload.BusinessObjectLoader">
+    <_config:DataReader className="com.ibm.commerce.foundation.dataload.datareader.SortedUniqueIdReader" >
+        <_config:property name="keyColumn" value="CATGROUP_ID" />
+        <_config:property name="parentColumn" value="CATGROUP_ID_PARENT" />
+		
+    	    <_config:Query name="SelelctUniqueId">
+    	      <_config:SQL>
+	    	    <![CDATA[
+					SELECT CATGROUP.CATGROUP_ID
+					FROM CATGROUP
+					  JOIN CATTOGRP ON (CATTOGRP.CATGROUP_ID = CATGROUP.CATGROUP_ID)
+					  JOIN STOREDEFCAT ON (CATTOGRP.CATALOG_ID = STOREDEFCAT.CATALOG_ID)
+					WHERE CATGROUP.MARKFORDELETE = 0 AND CATTOGRP.CATALOG_ID = ? AND STOREDEFCAT.STOREENT_ID = ?
+					ORDER BY CATGROUP.CATGROUP_ID
+    		    ]]>
+    	      </_config:SQL>
+    	      <_config:Param name="catalogId" valueFrom="BusinessContext" />
+    	      <_config:Param name="storeId" valueFrom="BusinessContext" />
+    	    </_config:Query>
+
+    	    <_config:Query name="SelelctUniqueId">
+    	      <_config:SQL>
+	    	    <![CDATA[
+					SELECT CATGROUP.CATGROUP_ID, CATGRPREL.CATGROUP_ID_PARENT
+					FROM CATGROUP
+					  JOIN CATGRPREL ON (CATGRPREL.CATGROUP_ID_CHILD = CATGROUP.CATGROUP_ID)
+					  JOIN STOREDEFCAT ON (CATGRPREL.CATALOG_ID = STOREDEFCAT.CATALOG_ID)
+					WHERE CATGROUP.MARKFORDELETE = 0 AND CATGRPREL.CATALOG_ID = ? AND STOREDEFCAT.STOREENT_ID = ?
+					ORDER BY CATGROUP.CATGROUP_ID
+    		    ]]>
+    	      </_config:SQL>
+    	      <_config:Param name="catalogId" valueFrom="BusinessContext" />
+    	      <_config:Param name="storeId" valueFrom="BusinessContext" />
+    	    </_config:Query>
+
+    </_config:DataReader>
+
+    <_config:BusinessObjectBuilder>
+      <_config:BusinessObjectMediator className="com.ibm.commerce.foundation.dataload.businessobjectmediator.AssociatedObjectMediator" >
+    	    <_config:Query>
+				<_config:SQL>
+					<![CDATA[
+						SELECT TRIM(CATGRPDESC.NAME) AS NAME, 
+							'11501_11_' || CATGROUP.CATGROUP_ID AS CATGROUP_ID, '11501_11_' || PARENT_CATGROUP.CATGROUP_ID AS PARENT_CATGROUP_ID,
+							'https://<Hostname/IP>:6443/Emerald/' || LOWER(REPLACE(TRIM(CATGRPDESC.NAME), ' ', '-'))  AS "CATEGORY_PAGE_URL",
+							'https://<Hostname/IP>:6443/hclstore' || CATGRPDESC.FULLIMAGE AS "IMAGE_URL"
+						FROM CATGROUP 
+						  LEFT OUTER JOIN CATGRPDESC ON (CATGROUP.CATGROUP_ID = CATGRPDESC.CATGROUP_ID AND LANGUAGE_ID = ?)
+						  LEFT OUTER JOIN CATTOGRP ON (CATGROUP.CATGROUP_ID = CATTOGRP.CATGROUP_ID AND CATTOGRP.CATALOG_ID = ?)
+						  LEFT OUTER JOIN CATGRPREL ON (CATGROUP.CATGROUP_ID = CATGRPREL.CATGROUP_ID_CHILD AND CATGRPREL.CATALOG_ID = ?)
+						  LEFT OUTER JOIN CATGROUP PARENT_CATGROUP ON (PARENT_CATGROUP.CATGROUP_ID = CATGRPREL.CATGROUP_ID_PARENT)
+						WHERE CATGROUP.CATGROUP_ID = ?
+					]]>
+				</_config:SQL>
+				<!-- Here '11501_11_' stands for 'CatalogId_StoreId_' --> 
+			
+				<_config:Param name="langId" valueFrom="BusinessContext" />
+				<_config:Param name="catalogId" valueFrom="BusinessContext" />
+				<_config:Param name="catalogId" valueFrom="BusinessContext" />
+				<_config:Param name="CATGROUP_ID" />
+		</_config:Query>
+
+		<_config:DataWriter className="com.hcl.commerce.integration.bazaarVoice.datawriter.BVXmlDataWriterExtend">
+			<_config:property name="fieldLength" value="256"/>
+			<_config:property name="mode" value="CREATE"/>
+			<_config:property name="bvaccount" value="partner-hcl"/>
+			<_config:property name="incremental" value="false"/>
+
+			<_config:DataOutputLocation location="C:/WCDE_V9/BV_DataExtract/Catalog/Emerald/Extracted_Data/partner-hcl_product_feed.xml"/>
+		</_config:DataWriter>
+		
+      </_config:BusinessObjectMediator>
+    </_config:BusinessObjectBuilder>
+  </_config:DataLoader>
+
+</_config:DataloadBusinessObjectConfiguration>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	=================================================================
+	Copyright [2021] [HCL Technologies]
+
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+
+		http://www.apache.org/licenses/LICENSE-2.0
+
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+	=================================================================
+-->
+
+<_config:DataloadBusinessObjectConfiguration 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.ibm.com/xmlns/prod/commerce/foundation/config ../../../WC/xml/config/xsd/wc-dataload-businessobject.xsd" 
+	xmlns:_config="http://www.ibm.com/xmlns/prod/commerce/foundation/config">
+
+  <_config:DataLoader className="com.ibm.commerce.foundation.dataload.BusinessObjectLoader">
+    <_config:DataReader className="com.ibm.commerce.foundation.dataload.datareader.UniqueIdReader" >
+
+    	    <_config:Query name="SelelctUniqueId">
+				<_config:SQL>
+					<![CDATA[
+						SELECT CATENTRY.CATENTRY_ID
+						FROM CATENTRY
+							JOIN CATGPENREL ON CATENTRY.CATENTRY_ID = CATGPENREL.CATENTRY_ID AND CATGPENREL.CATALOG_ID = ?
+							JOIN CATGRPREL ON CATGPENREL.CATGROUP_ID = CATGRPREL.CATGROUP_ID_CHILD AND CATGPENREL.CATALOG_ID = CATGRPREL.CATALOG_ID
+							JOIN STOREDEFCAT ON CATGRPREL.CATALOG_ID = STOREDEFCAT.CATALOG_ID AND STOREDEFCAT.STOREENT_ID = ?
+						WHERE CATENTRY.CATENTTYPE_ID NOT IN ('ItemBean') AND CATENTRY.MARKFORDELETE = 0
+						ORDER BY CATENTRY.CATENTRY_ID
+					]]>
+				</_config:SQL>
+
+				<_config:Param name="catalogId" valueFrom="BusinessContext" />
+				<_config:Param name="storeId" valueFrom="BusinessContext" />
+    	    </_config:Query>
+			
+    </_config:DataReader>
+
+    <_config:BusinessObjectBuilder>
+      <_config:BusinessObjectMediator className="com.ibm.commerce.foundation.dataload.businessobjectmediator.AssociatedObjectMediator" >
+    	    <_config:Query>
+				<_config:SQL>
+					<![CDATA[
+						SELECT '11501_11_' || CATENTRY.CATENTRY_ID AS CATENTRY_ID, '11501_11_' || CATGROUP.CATGROUP_ID AS CATGROUP_ID, 
+							CATENTRY.PARTNUMBER, TRIM(CATENTDESC.NAME) AS NAME, 
+							'https://<Hostname/IP>:6443/Emerald/' || LOWER(REPLACE(TRIM(CATENTDESC.NAME), ' ', '-')) || '-' || LOWER(REPLACE(TRIM(CATENTRY.PARTNUMBER), ' ', '-')) AS PRODUCT_PAGE_URL,
+							'https://<Hostname/IP>:6443/hclstore' || CATENTDESC.THUMBNAIL AS IMAGE_URL, 
+							TRIM(CATENTDESC.SHORTDESCRIPTION) AS SHORTDESCRIPTION
+						FROM CATENTRY CATENTRY
+							JOIN CATENTDESC ON CATENTRY.CATENTRY_ID = CATENTDESC.CATENTRY_ID AND CATENTDESC.LANGUAGE_ID = ?
+							JOIN CATGPENREL ON CATENTRY.CATENTRY_ID = CATGPENREL.CATENTRY_ID AND CATGPENREL.CATALOG_ID = ?
+							JOIN CATGROUP ON CATGPENREL.CATGROUP_ID = CATGROUP.CATGROUP_ID
+						WHERE CATENTRY.CATENTRY_ID IN (?)
+					 ]]>
+				</_config:SQL>
+				<!-- Here '11501_11_' stands for 'CatalogId_StoreId_' --> 
+			  
+				<_config:Param name="langId" valueFrom="BusinessContext" />
+				<_config:Param name="catalogId" valueFrom="BusinessContext" />
+				<_config:Param name="CATENTRY_ID" />
+    	    </_config:Query>
+
+			<_config:DataWriter className="com.hcl.commerce.integration.bazaarVoice.datawriter.BVXmlDataWriterExtend">
+				<_config:property name="fieldLength" value="256"/>
+				<_config:property name="mode" value="APPEND"/>
+				<_config:property name="bvaccount" value="partner-hcl"/>
+				<_config:property name="incremental" value="false"/>
+				
+				<_config:DataOutputLocation location="C:/WCDE_V9/BV_DataExtract/Catalog/Emerald/Extracted_Data/partner-hcl_product_feed.xml"/>
+			</_config:DataWriter>
+
+      </_config:BusinessObjectMediator>
+    </_config:BusinessObjectBuilder>
+  </_config:DataLoader>
+
+</_config:DataloadBusinessObjectConfiguration>

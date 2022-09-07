@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- =================================================================
-  Licensed Materials - Property of HCL Technologies
-
-  HCL Commerce
-
-  (C) Copyright HCL Technologies Limited 1996, 2020
-
- =================================================================
+ 	=================================================================
+	Copyright [2021] [HCL America, Inc.]
+	=================================================================
 -->
 <Definitions>
 	<WidgetObjectDefinition baseDefinition="cmc/pagelayout/BaseLayoutWidget" definitionName="cmc/pagelayout/LayoutWidget_ProductListingWidget" gridPropertiesDefinition="cmc/pagelayout/WidgetProperties_ProductListingWidget" helpLink="concepts/cpzwidcegrid.html" iconPath="/images/pagelayouts/widgetIcons/catalog_entry_grid.png" objectType="ProductListingWidget" package="cmc/pagelayout" parentDefinition="cmc/pagelayout/BasePageLayoutPrimaryObjectDefinition" widgetDisplayGroups="CategoryPage,SearchPage">

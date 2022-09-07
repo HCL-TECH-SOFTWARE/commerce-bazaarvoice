@@ -1,6 +1,8 @@
-/*
- * Licensed Materials - Property of HCL Technologies Limited. (c) Copyright HCL Technologies Limited 1996, 2020.
- */
+/**
+	*=================================================================
+	Copyright [2021] [HCL America, Inc.]
+	*=================================================================
+**/
 
 import java.time.Instant
 

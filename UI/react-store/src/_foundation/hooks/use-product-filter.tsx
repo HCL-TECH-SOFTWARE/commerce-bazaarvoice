@@ -1,10 +1,10 @@
 /**
  *==================================================
- * Licensed Materials - Property of HCL Technologies
+ * Licensed Materials - Property of HCL America, Inc.
  *
  * HCL Commerce
  *
- * (C) Copyright HCL Technologies Limited 2021
+ * (C) Copyright HCL America, Inc. Limited 2021
  *
  *==================================================
  */

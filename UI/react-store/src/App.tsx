@@ -1,11 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /*
  *==================================================
- * Licensed Materials - Property of HCL Technologies
+ * Licensed Materials - Property of HCL America, Inc.
  *
  * HCL Commerce
  *
- * (C) Copyright HCL Technologies Limited 2020
+ * (C) Copyright HCL America, Inc. Limited 2020
  *
  *==================================================
  */
